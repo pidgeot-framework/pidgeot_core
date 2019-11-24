@@ -7,7 +7,7 @@ defmodule PidgeotCore.Action do
       def init(opts), do: opts
 
       def call(conn, opts) do
-        conn
+        perform(conn)
       end
     end
   end

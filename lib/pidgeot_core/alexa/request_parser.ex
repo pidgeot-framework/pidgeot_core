@@ -3,11 +3,14 @@ defmodule PidgeotCore.Alexa.RequestParser do
   def request(_), do: %{}
 
   def request_type(json) do
-    request(json) |> type_from_request()
+    json
+    |> request()
+    |> type_from_request()
   end
 
   def intent_name(json) do
-    request(json)
+    json
+    |> request()
     |> intent_from_request()
     |> name_from_intent()
   end

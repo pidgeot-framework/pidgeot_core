@@ -1,6 +1,7 @@
 defmodule PidgeotCore.Alexa.RequestHandler do
   import PidgeotCore.Alexa.RequestParser
-  import PidgeotCore.Alexa.ResponseBuilder
+  alias PidgeotCore.Alexa.ResponseHandler
+  alias PidgeotCore.Alexa.PidgeotStore
 
   def init(options) do
     options
@@ -35,11 +36,9 @@ defmodule PidgeotCore.Alexa.RequestHandler do
 
   defp call_mapped_action(conn, action_name, map_module) do
     conn
-    |> initialize_store()
+    |> PidgeotStore.init()
     |> map_module.action_call(action_name)
-    |> encode_response()
-    |> set_headers()
-    |> send_response()
+    |> ResponseHandler.handle()
   end
 
   defp validate_existing_map_module(module) do

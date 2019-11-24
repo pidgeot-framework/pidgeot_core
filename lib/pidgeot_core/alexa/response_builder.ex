@@ -1,23 +1,37 @@
 defmodule PidgeotCore.Alexa.ResponseBuilder do
-    alias PidgeotCore.Alexa.PidgeotStore
+  alias PidgeotCore.Alexa.Structs.ServerResponse
+  alias PidgeotCore.Alexa.Structs.OutputSpeech
+  alias PidgeotCore.Alexa.PidgeotStore
 
-    import Plug.Conn
+  def build_response(conn) do
+    conn
+      |> load_server_response()
+      |> compile_reprompt()
+      |> compile_speech()
+      |> save_server_response(conn)
+  end
 
-    def initialize_store(conn) do
-      PidgeotStore.init(conn)
+  defp compile_reprompt(%ServerResponse{} = struct) do
+    path = [:response, :reprompt, :outputSpeech]
+    compile_ssml(struct, path)
+  end
+
+  defp compile_speech(%ServerResponse{} = struct) do
+    path = [:response, :outputSpeech]
+    compile_ssml(struct, path)
+  end
+
+  defp load_server_response(conn), do: PidgeotStore.load_response(conn)
+
+  defp save_server_response(response, conn), do: PidgeotStore.save_response(conn, response)
+
+
+  defp compile_ssml(%ServerResponse{} = struct, path) do
+    speech = ServerResponse.get(struct, path)
+    case speech do
+      nil -> struct
+      _ -> compiled_speech = OutputSpeech.compile_ssml(speech)
+           ServerResponse.set(struct, path, compiled_speech)
     end
-
-    def encode_response(conn) do
-      json = conn
-              |> PidgeotStore.fetch(:server_response)
-              |> Poison.encode!()
-
-      resp(conn, 200, json)
-    end
-
-    def set_headers(conn) do
-      put_resp_content_type(conn, "application/json")
-    end
-
-    def send_response(conn), do: send_resp(conn)
+  end
 end
