@@ -94,7 +94,6 @@ defmodule PidgeotCore.Alexa.SpeechBuilder do
     "#{ssml}<s>#{text}</s>"
   end
 
-
   def w(role, text), do: w("", role, text)
   def w(ssml, role, [do: text]), do: w(ssml, role, text)
   def w(ssml, role, text) do

@@ -14,6 +14,16 @@ defmodule PidgeotCore.Action do
     end
   end
 
-  def redirect_to(conn, module) do
+  def execute_action(conn, module) do
+    if !Keyword.has_key?(module.__info__(:functions), :call) do
+      raise("No action spcified in module #{to_string(module)}")
+    end
+
+    if !Keyword.has_key?(module.__info__(:functions), :call) do
+      raise("No action spcified in module #{to_string(module)}")
+    end
+
+    opts = module.init([])
+    module.call(conn, opts)
   end
 end
