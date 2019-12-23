@@ -95,6 +95,12 @@ defmodule PidgeotCore.Alexa.SpeechBuilder do
   end
 
 
+  def w(role, text), do: w("", role, text)
+  def w(ssml, role, [do: text]), do: w(ssml, role, text)
+  def w(ssml, role, text) do
+    "#{ssml}<w role=\"#{role}\">#{text}</w>"
+  end
+
   def emphasis(level, text), do: emphasis("", level, text)
   def emphasis(ssml, level, [do: text]), do: emphasis(ssml, level, text)
   def emphasis(ssml, level, text) do
