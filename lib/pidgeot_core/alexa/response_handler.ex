@@ -1,14 +1,13 @@
 defmodule PidgeotCore.Alexa.ResponseHandler do
     alias PidgeotCore.Alexa.PidgeotStore
-
     import PidgeotCore.Alexa.ResponseBuilder
     import Plug.Conn
 
     def handle(conn) do
       conn
       |> build_response()
-      |> encode_response()
       |> set_headers()
+      |> encode_response()
       |> send_response()
     end
 

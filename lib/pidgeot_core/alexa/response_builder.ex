@@ -8,12 +8,18 @@ defmodule PidgeotCore.Alexa.ResponseBuilder do
       |> load_server_response()
       |> compile_reprompt()
       |> compile_speech()
+      |> log_response()
       |> save_server_response(conn)
   end
 
   defp compile_reprompt(%ServerResponse{} = struct) do
     path = [:response, :reprompt, :outputSpeech]
     compile_ssml(struct, path)
+  end
+
+  defp log_response(struct) do
+    IO.inspect(struct)
+    struct
   end
 
   defp compile_speech(%ServerResponse{} = struct) do

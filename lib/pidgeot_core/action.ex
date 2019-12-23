@@ -3,6 +3,8 @@ defmodule PidgeotCore.Action do
     quote location: :keep do
       import PidgeotCore.Action
       import PidgeotCore.Alexa.SpeechBuilder
+      alias PidgeotCore.Alexa.Structs.ServerResponse
+      alias PidgeotCore.Alexa.PidgeotStore
 
       def init(opts), do: opts
 
